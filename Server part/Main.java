@@ -9,7 +9,7 @@ public class Main {
         ChequeRecognitionServer srv = new ChequeRecognitionServer();
         try{
             srv.start();
-        } catch (NoConnectionExeption e){
+        } catch (NoConnectionException e){
             System.out.println("Shit happens.");
         }
     }

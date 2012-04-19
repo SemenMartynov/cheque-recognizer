@@ -12,12 +12,12 @@ import java.net.Socket;
 public class ChequeRecognitionServer {
     private ServerSocket mySocket;
 
-    public void start() throws NoConnectionExeption{
+    public void start() throws NoConnectionException {
         try{
             mySocket = new ServerSocket(3843);
         } catch (IOException e){
             System.err.println("Can't listen port 3843");
-            throw new NoConnectionExeption();
+            throw new NoConnectionException();
         }
         while (true){
             try{
@@ -26,7 +26,7 @@ public class ChequeRecognitionServer {
                 wk.start();
             } catch (IOException e){
                 System.err.println("Can't accept on ServerSocket.");
-                throw new NoConnectionExeption();
+                throw new NoConnectionException();
             }
         }
     }
