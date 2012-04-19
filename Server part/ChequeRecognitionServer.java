@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Classname:
@@ -10,24 +12,27 @@ import java.net.Socket;
  */
 
 public class ChequeRecognitionServer {
-    private ServerSocket mySocket;
+    private final ServerSocket myServerSocket;
+    private final ExecutorService pool;
 
-    public void start() throws NoConnectionException {
+    public ChequeRecognitionServer(int port) throws NoConnectionException{
         try{
-            mySocket = new ServerSocket(3843);
+            myServerSocket = new ServerSocket(3843);
         } catch (IOException e){
             System.err.println("Can't listen port 3843");
             throw new NoConnectionException();
         }
-        while (true){
-            try{
-                Socket clientSocket = mySocket.accept();
-                Worker wk = new Worker(clientSocket);
-                wk.start();
-            } catch (IOException e){
+        pool = Executors.newCachedThreadPool();
+    }
+
+    public void start() throws NoConnectionException {
+        try{
+            for(;;){
+                pool.execute(new Worker(myServerSocket.accept()));
+            }
+        } catch (IOException e){
                 System.err.println("Can't accept on ServerSocket.");
                 throw new NoConnectionException();
-            }
         }
     }
 }

@@ -6,8 +6,8 @@
  */
 public class Main {
     public static void main(String[] argv){
-        ChequeRecognitionServer srv = new ChequeRecognitionServer();
         try{
+            ChequeRecognitionServer srv = new ChequeRecognitionServer(3843);
             srv.start();
         } catch (NoConnectionException e){
             System.out.println("Shit happens.");

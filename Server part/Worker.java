@@ -1,8 +1,5 @@
-import java.io.File;
+import java.io.*;
 import java.net.Socket;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 
 /**
  * Classname:
@@ -10,46 +7,35 @@ import java.io.InputStream;
  * Date: 4/19/12
  * Time: 4:18 PM
  */
-public class Worker extends Thread{
+public class Worker implements Runnable{
     private Socket mySocket;
-    private static final Integer fileSize = 1024*1024*10; // filesize temporary hardcoded
+    private static final Integer bufferSize = 1024; // bufferSize temporary hardcoded
 
     public Worker(Socket inpSocket){
         mySocket = inpSocket;
     }
 
+
     @Override
     public void run(){
         System.out.println("New worker started.");
-        byte[] mybytearray = new byte[fileSize];
+        byte[] buffer = new byte[bufferSize];
         try{
-            File file = new File(Double.toString(System.nanoTime()));
-            if (file.exists()){
-                file.delete();
-            }
-            if (!file.createNewFile()){
-                throw new Exception();
-            }
+            File imageFile = File.createTempFile("img", ".tmp");
             InputStream is = mySocket.getInputStream();
-            FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = new FileOutputStream(imageFile);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
-            int offset = 0;
+            final int offset = 0;
             int bytesRead = 0;
-            int currBytesRead = 0;
-            do{
-                currBytesRead = is.read(mybytearray, offset, mybytearray.length - offset);
-                if (currBytesRead > 0){
-                    bytesRead += currBytesRead;
-                }
-                offset += bytesRead;
-            } while (currBytesRead > 0);
-            bos.write(mybytearray, 0, bytesRead);
-            bos.flush();
+            while (is.available() > 0){
+                bytesRead = is.read(buffer, offset, buffer.length);
+                bos.write(buffer, 0, bytesRead);
+            }
             bos.close();
             mySocket.close();
-        } catch (Exception e){
-            System.out.println("Shit happens!");
+        } catch (IOException e){
+            System.out.println("Can't save image. Got IOException.");
         }
-        System.out.println("File written.");
+        System.out.println("File successfully written.");
     }
 }
