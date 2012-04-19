@@ -7,12 +7,17 @@ import ru.spbau.cheque.server.recognition.TesseractOcrEngine;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class Recognizer extends Thread {
+public class Recognizer implements Runnable {
     public Recognizer() {
         this.engine = new TesseractOcrEngine("tesseract", "-l rus -psm 6");
     }
 
-    List<String> doRecognition(BufferedImage image) throws OcrFailedException {
+    @Override
+    public void run() {
+
+    }
+
+    public List<String> doRecognition(BufferedImage image) throws OcrFailedException {
         return engine.doOcr(image);
     }
 

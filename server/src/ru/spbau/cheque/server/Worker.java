@@ -13,61 +13,50 @@ import java.util.List;
  * Date: 4/19/12
  * Time: 4:18 PM
  */
-public class Worker extends Thread{
+public class Worker implements Runnable{
     private Socket mySocket;
-    private static final Integer fileSize = 1024*1024*10; // filesize temporary hardcoded
+    private static final Integer bufferSize = 1024; // bufferSize temporary hardcoded
 
     public Worker(Socket inpSocket){
         mySocket = inpSocket;
     }
 
+
     @Override
     public void run(){
         System.out.println("New worker started.");
-        byte[] mybytearray = new byte[fileSize];
-        File file = null;
+        byte[] buffer = new byte[bufferSize];
+        File imageFile = null;
         try{
-            file = new File(Double.toString(System.nanoTime()));
-            if (file.exists()){
-                file.delete();
-            }
-            if (!file.createNewFile()){
-                throw new Exception();
-            }
+            imageFile = File.createTempFile("img", ".tmp");
             InputStream is = mySocket.getInputStream();
-            FileOutputStream fos = new FileOutputStream(file);
+            FileOutputStream fos = new FileOutputStream(imageFile);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
-            int offset = 0;
+            final int offset = 0;
             int bytesRead = 0;
-            int currBytesRead = 0;
-            do{
-                currBytesRead = is.read(mybytearray, offset, mybytearray.length - offset);
-                if (currBytesRead > 0){
-                    bytesRead += currBytesRead;
-                }
-                offset += bytesRead;
-            } while (currBytesRead > 0);
-            bos.write(mybytearray, 0, bytesRead);
-            bos.flush();
+            while (is.available() > 0){
+                bytesRead = is.read(buffer, offset, buffer.length);
+                bos.write(buffer, 0, bytesRead);
+            }
             bos.close();
             mySocket.close();
-        } catch (Exception e){
-            System.out.println("Shit happens!");
+        } catch (IOException e){
+            System.out.println("Can't save image. Got IOException.");
         }
-        System.out.println("File written.");
+        System.out.println("File successfully written.");
 
-        if (file != null) {
+        if (imageFile != null) {
             Recognizer recognizer = new Recognizer();
             try {
-                List<String> ocrText = recognizer.doRecognition(ImageIO.read(file));
+                List<String> ocrText = recognizer.doRecognition(ImageIO.read(imageFile));
                 for (String ocrLine : ocrText) {
                     System.out.println(ocrLine);
                 }
                 System.out.println("File (probably) recognized.");
             } catch (OcrFailedException e) {
-                System.out.println("Shit happens! (especially when trying to recognize an image)");
+                System.out.println("OCR failed for some reason");
             } catch (IOException e) {
-                System.out.println("Shit happens! (especially when trying to read a file)");
+                System.out.println("Can't read image file");
             }
         }
     }
