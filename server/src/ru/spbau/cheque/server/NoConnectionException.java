@@ -1,3 +1,5 @@
+package ru.spbau.cheque.server;
+
 /**
  * Classname:
  * User: dimatwl

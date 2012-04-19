@@ -8,7 +8,6 @@ import java.util.List;
 
 public class TesseractOcrMain {
     public static void main(String[] args) {
-
         String ocrEngineExe = args[0];
         String imageName = args[1];
         TesseractOcrEngine ocr = new TesseractOcrEngine(ocrEngineExe, "-l rus -psm 6");

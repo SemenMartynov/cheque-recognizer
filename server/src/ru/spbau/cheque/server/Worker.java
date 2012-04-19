@@ -1,8 +1,11 @@
-import java.io.File;
+package ru.spbau.cheque.server;
+
+import ru.spbau.cheque.server.recognition.OcrFailedException;
+
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.net.Socket;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.util.List;
 
 /**
  * Classname:
@@ -22,8 +25,9 @@ public class Worker extends Thread{
     public void run(){
         System.out.println("New worker started.");
         byte[] mybytearray = new byte[fileSize];
+        File file = null;
         try{
-            File file = new File(Double.toString(System.nanoTime()));
+            file = new File(Double.toString(System.nanoTime()));
             if (file.exists()){
                 file.delete();
             }
@@ -51,5 +55,20 @@ public class Worker extends Thread{
             System.out.println("Shit happens!");
         }
         System.out.println("File written.");
+
+        if (file != null) {
+            Recognizer recognizer = new Recognizer();
+            try {
+                List<String> ocrText = recognizer.doRecognition(ImageIO.read(file));
+                for (String ocrLine : ocrText) {
+                    System.out.println(ocrLine);
+                }
+                System.out.println("File (probably) recognized.");
+            } catch (OcrFailedException e) {
+                System.out.println("Shit happens! (especially when trying to recognize an image)");
+            } catch (IOException e) {
+                System.out.println("Shit happens! (especially when trying to read a file)");
+            }
+        }
     }
 }
