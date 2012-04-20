@@ -10,13 +10,6 @@ public class RegexTableExtractor implements TableExtractor {
         List<BlueObject> entries = new ArrayList<BlueObject>();
         String nameAccum = "";
         for (String line : text) {
-            BlueObject entry = null;
-//            Matcher m = Pattern.compile("(.*)\\p{Blank}([\\p{Digit}\\p{Punct}]+)$").matcher(line);
-//            if (m.matches()) {
-//
-//            }
-
-
             Matcher matcher = Pattern.compile("^([\\p{Digit}\\p{Punct}]+)\\p{Blank}+(.*)").matcher(line);
             if (matcher.matches()) {
                 String f1 = matcher.group(1);
@@ -25,18 +18,14 @@ public class RegexTableExtractor implements TableExtractor {
                 if (matcher2.matches()) {
                     String price = matcher2.group(2);
                     try {
-                        entry = new BlueObject(nameAccum + matcher2.group(1),
-                                               Float.parseFloat(price.replaceAll("^\\p{Punct}|\\p{Punct}$", "")));
-                        entries.add(entry);
+                        entries.add(new BlueObject(nameAccum + matcher2.group(1),
+                                    Float.parseFloat(price.replaceAll("^\\p{Punct}|\\p{Punct}$", ""))));
                         nameAccum = "";
                     } catch (NumberFormatException e) {
                         // suppress it - just don't add this to `entries`
                         // this is most probably caused by line-wrap - save to accumulator
                         nameAccum = matcher2.group(1) + price;
                     }
-                    //entry += f1 + ";" + matcher2.group(1) + ";" + matcher2.group(2);
-//                } else {
-//                    entry += f1 + ";" + f2;
                 }
             }
 
