@@ -26,16 +26,28 @@ public class TesseractOcrMain {
         }
 
         List<String> ocrText = null;
+        List<String> csvText = null;
         try {
             ocrText = ocr.doOcr(image);
+            TableExtractor extractor = new RegexTableExtractor();
+            csvText = extractor.extract(ocrText);
         } catch (OcrFailedException e) {
             System.err.println("Can't do OCR");
             e.printStackTrace();
             System.exit(1);
         }
 
-        for (String ocrLine : ocrText) {
-            System.out.println(ocrLine);
+        System.out.println("OCRed text:");
+        if (ocrText != null) {
+            for (String ocrLine : ocrText) {
+                System.out.println(ocrLine);
+            }
+        }
+        System.out.println("Extracted table:");
+        if (csvText != null) {
+            for (String line : csvText) {
+                System.out.println(line);
+            }
         }
     }
 }
