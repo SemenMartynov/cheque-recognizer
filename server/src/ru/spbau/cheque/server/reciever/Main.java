@@ -6,7 +6,7 @@ public class Main {
             ChequeRecognitionServer srv = new ChequeRecognitionServer(3843);
             srv.start();
         } catch (NoConnectionException e){
-            System.out.println("Shit happens.");
+            System.out.println("Can't establish connection.");
         }
     }
 }
