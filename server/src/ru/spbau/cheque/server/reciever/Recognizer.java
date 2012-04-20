@@ -12,6 +12,16 @@ public class Recognizer implements Runnable {
         this.companyNameExtractor = new CompanyNameExtractor();
     }
 
+    public Recognizer(OcrEngine engine) {
+        if (engine == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.engine = engine;
+        this.tableExtractor = new RegexTableExtractor();
+        this.companyNameExtractor = new CompanyNameExtractor();
+    }
+
     @Override
     public void run() {
 
