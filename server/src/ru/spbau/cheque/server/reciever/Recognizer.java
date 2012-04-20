@@ -16,10 +16,28 @@ public class Recognizer implements Runnable {
 
     }
 
-    public List<String> doRecognition(BufferedImage image) throws OcrFailedException {
-        return tableExtractor.extract(engine.doOcr(image));
+    public Cheque doRecognition(BufferedImage image,
+                                int tableX, int tableY, int tableW, int tableH) throws OcrFailedException {
+        List<String> ocredText = engine.doOcr(image);
+        List<String> ocredAreaText = engine.doOcr(image.getSubimage(tableX, tableY, tableW, tableH));
+
+        ChequeFormat format = determineFormat(ocredText);
+        String companyName = companyNameExtractor.extract(format, ocredText);
+        List<BlueObject> entries = tableExtractor.extract(format, ocredAreaText);
+
+        return new Cheque(companyName, entries);
+    }
+
+    public Cheque doRecognition(BufferedImage image) throws OcrFailedException {
+        return doRecognition(image, image.getMinX(), image.getMinY(), image.getWidth(), image.getHeight());
+    }
+
+    public ChequeFormat determineFormat(List<String> text) {
+        //stub
+        return new ChequeFormat(companyNameExtractor.extract(new ChequeFormat(""), text));
     }
 
     private OcrEngine engine;
     private TableExtractor tableExtractor;
+    private CompanyNameExtractor companyNameExtractor;
 }
