@@ -19,11 +19,12 @@ public class Worker implements Runnable{
         mySocket = inpSocket;
     }
     
-    BufferedImage recieveImage() throws ImageSavingFailureException{
+    private BufferedImage recieveImage() throws ImageSavingFailureException{
         try{
             InputStream is = mySocket.getInputStream();
             BufferedImage image = ImageIO.read(is);
             System.out.println("File successfully recieved."); //Supposed to be written in log.
+            is.close();
             return image;
         } catch (IOException e){
             System.err.println("Can't recieve image. Got IOException."); //Supposed to be written in log.
@@ -38,11 +39,11 @@ public class Worker implements Runnable{
             os.writeBytes(inpResponse);
             os.close();
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to: hostname");
+            System.err.println("Couldn't get I/O for the connection to: " + mySocket.getInetAddress().toString()); //Supposed to be written in log.
         }
     }
 
-    List<Integer> recieveAreaCoordinates() throws ImageSavingFailureException{
+    private List<Integer> recieveAreaCoordinates() throws ImageSavingFailureException{
         List<Integer> coordinates = new ArrayList<Integer>(4);
         byte[] buffer = new byte[4];
         try{
@@ -52,10 +53,23 @@ public class Worker implements Runnable{
                 if (bytesRead <= 0) throw new ImageSavingFailureException();
                 coordinates.add(ByteBuffer.wrap(buffer, 0, 4).getInt());
             }
+            is.close();
             return coordinates;
         } catch (IOException e){
             System.err.println("Can't recieve coordinates. Got IOException."); //Supposed to be written in log.
             throw new ImageSavingFailureException();
+        }
+    }
+
+    private void sendCheque(Cheque inpCheque){
+        ObjectOutputStream oos = null;
+        try{
+            oos = new ObjectOutputStream(mySocket.getOutputStream());
+            oos.writeObject(inpCheque);
+            oos.close();
+            System.out.println("Recognized cheque successfully sent."); //Supposed to be written in log.
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to: " + mySocket.getInetAddress().toString()); //Supposed to be written in log.
         }
     }
 
@@ -67,8 +81,10 @@ public class Worker implements Runnable{
             BufferedImage image = recieveImage();
             Recognizer recognizer = new Recognizer();
             Cheque recognizedCheque = recognizer.doRecognition(image, areaCoordinates.get(0), areaCoordinates.get(1), areaCoordinates.get(2), areaCoordinates.get(3));
+            System.out.println("Cheque successfully recognized."); //Supposed to be written in log.
             sendResponse("OK");
-            //todo: serialize and send cheque
+            sendCheque(recognizedCheque);
+
         } catch (ImageSavingFailureException e){
             System.err.println("Worker cant't complete task because image can not be saved or received."); //Supposed to be written in log.
             sendResponse("ERROR");
