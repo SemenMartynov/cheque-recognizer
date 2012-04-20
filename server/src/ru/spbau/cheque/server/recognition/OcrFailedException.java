@@ -17,6 +17,7 @@ public class OcrFailedException extends Throwable {
     }
 
     public OcrFailedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+        //fixme: got error here.
+        //super(message, cause, enableSuppression, writableStackTrace);
     }
 }

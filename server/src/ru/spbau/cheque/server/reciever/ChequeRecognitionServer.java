@@ -1,16 +1,11 @@
-package ru.spbau.cheque.server;
+package ru.spbau.cheque.server.reciever;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Classname:
- * User: dimatwl
- * Date: 4/19/12
- * Time: 3:43 PM
- */
 
 public class ChequeRecognitionServer {
     private final ServerSocket myServerSocket;

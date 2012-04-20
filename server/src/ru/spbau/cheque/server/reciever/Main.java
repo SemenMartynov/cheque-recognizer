@@ -1,12 +1,6 @@
-package ru.spbau.cheque.server;
+package ru.spbau.cheque.server.reciever;
 
-/**
- * Classname:
- * User: dimatwl
- * Date: 4/19/12
- * Time: 4:49 PM
- */
-public class ServerMain {
+public class Main {
     public static void main(String[] argv){
         try{
             ChequeRecognitionServer srv = new ChequeRecognitionServer(3843);
