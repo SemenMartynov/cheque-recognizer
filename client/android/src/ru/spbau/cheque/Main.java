@@ -33,7 +33,7 @@ public class Main extends Activity
         spendingsSumBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Main.this, spendingsSumActivity.class);
+                Intent intent = new Intent(Main.this, SpendingsSumActivity.class);
                 startActivity(intent);
             }
         });
@@ -45,9 +45,12 @@ public class Main extends Activity
             try {
                 Bitmap pic = (Bitmap) data.getExtras().get("data");
                 sock = new Socket("192.168.222.169", 3843);
+                //todo: send square area coordinates
                 OutputStream os = sock.getOutputStream();
                 pic.compress(Bitmap.CompressFormat.JPEG, 100, os);
                 os.flush();
+                //todo: recieve and handle response about image processing
+                //todo: recieve and put to DB blue objects here
             } catch (IOException e) {
                 e.printStackTrace();
             }

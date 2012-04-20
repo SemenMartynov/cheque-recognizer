@@ -13,7 +13,7 @@ import android.widget.TextView;
  * Date: 4/20/12
  * Time: 9:25 PM
  */
-public class spendingsSumActivity extends Activity {
+public class SpendingsSumActivity extends Activity {
 
     /** Called when the activity is first created. */
     @Override
