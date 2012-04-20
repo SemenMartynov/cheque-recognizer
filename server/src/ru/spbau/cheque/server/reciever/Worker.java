@@ -51,9 +51,12 @@ public class Worker implements Runnable{
         try{
             File imageFile = recieveAndStoreImage();
             sendResponse("OK");
+            mySocket.close();
         } catch (ImageSavingFailureException e){
             System.err.println("Worker cant't complete task because image can not be saved or received."); //Supposed to be written in log.
             sendResponse("ERROR");
+        } catch (IOException e){
+            System.err.println("Strange IOException on closing socket."); //Supposed to be written in log.
         }
     }
 }
