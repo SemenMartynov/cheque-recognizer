@@ -44,7 +44,7 @@ public class Main extends Activity
             Socket sock = null;
             try {
                 Bitmap pic = (Bitmap) data.getExtras().get("data");
-                sock = new Socket("192.168.222.169", 3843);
+                sock = new Socket("192.168.0.102", 3843);
                 //todo: send square area coordinates
                 OutputStream os = sock.getOutputStream();
                 pic.compress(Bitmap.CompressFormat.JPEG, 100, os);

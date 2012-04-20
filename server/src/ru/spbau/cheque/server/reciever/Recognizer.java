@@ -5,7 +5,7 @@ import ru.spbau.cheque.server.recognition.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class Recognizer implements Runnable {
+public class Recognizer {
     public Recognizer() {
         this.engine = new TesseractOcrEngine("tesseract", "-l rus -psm 6");
         this.tableExtractor = new RegexTableExtractor();
@@ -22,10 +22,6 @@ public class Recognizer implements Runnable {
         this.companyNameExtractor = new CompanyNameExtractor();
     }
 
-    @Override
-    public void run() {
-
-    }
 
     public Cheque doRecognition(BufferedImage image,
                                 int tableX, int tableY, int tableW, int tableH) throws OcrFailedException {

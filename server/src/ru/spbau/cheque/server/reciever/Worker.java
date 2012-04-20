@@ -1,7 +1,15 @@
 package ru.spbau.cheque.server.reciever;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.spbau.cheque.server.recognition.*;
+
+import javax.imageio.ImageIO;
 
 public class Worker implements Runnable{
     private Socket mySocket;
@@ -11,26 +19,14 @@ public class Worker implements Runnable{
         mySocket = inpSocket;
     }
     
-    File recieveAndStoreImage() throws ImageSavingFailureException{
-        System.out.println("New worker started.");  //Supposed to be written in log.
-        byte[] buffer = new byte[bufferSize];
+    BufferedImage recieveImage() throws ImageSavingFailureException{
         try{
-            File imageFile = File.createTempFile("img", ".tmp");
             InputStream is = mySocket.getInputStream();
-            FileOutputStream fos = new FileOutputStream(imageFile);
-            BufferedOutputStream bos = new BufferedOutputStream(fos);
-            final int offset = 0;
-            int bytesRead = 0;
-            while (is.available() > 0){
-                bytesRead = is.read(buffer, offset, buffer.length);
-                bos.write(buffer, 0, bytesRead);
-            }
-            bos.close();
-            mySocket.close();
-            System.out.println("File successfully written."); //Supposed to be written in log.
-            return imageFile;
+            BufferedImage image = ImageIO.read(is);
+            System.out.println("File successfully recieved."); //Supposed to be written in log.
+            return image;
         } catch (IOException e){
-            System.err.println("Can't save image. Got IOException."); //Supposed to be written in log.
+            System.err.println("Can't recieve image. Got IOException."); //Supposed to be written in log.
             throw new ImageSavingFailureException();
         }
     }
@@ -46,17 +42,46 @@ public class Worker implements Runnable{
         }
     }
 
+    List<Integer> recieveAreaCoordinates() throws ImageSavingFailureException{
+        List<Integer> coordinates = new ArrayList<Integer>(4);
+        byte[] buffer = new byte[4];
+        try{
+            InputStream is = mySocket.getInputStream();
+            for (int i = 0; i < 4; ++i){
+                int bytesRead = is.read(buffer, 0, 4);
+                if (bytesRead <= 0) throw new ImageSavingFailureException();
+                coordinates.add(ByteBuffer.wrap(buffer, 0, 4).getInt());
+            }
+            return coordinates;
+        } catch (IOException e){
+            System.err.println("Can't recieve coordinates. Got IOException."); //Supposed to be written in log.
+            throw new ImageSavingFailureException();
+        }
+    }
+
     @Override
     public void run(){
+        System.out.println("New worker started.");  //Supposed to be written in log.
         try{
-            File imageFile = recieveAndStoreImage();
+            List<Integer> areaCoordinates = recieveAreaCoordinates();
+            BufferedImage image = recieveImage();
+            Recognizer recognizer = new Recognizer();
+            Cheque recognizedCheque = recognizer.doRecognition(image, areaCoordinates.get(0), areaCoordinates.get(1), areaCoordinates.get(2), areaCoordinates.get(3));
             sendResponse("OK");
-            mySocket.close();
+            //todo: serialize and send cheque
         } catch (ImageSavingFailureException e){
             System.err.println("Worker cant't complete task because image can not be saved or received."); //Supposed to be written in log.
             sendResponse("ERROR");
-        } catch (IOException e){
-            System.err.println("Strange IOException on closing socket."); //Supposed to be written in log.
+        } catch (OcrFailedException e){
+            System.err.println("Worker cant't complete task because image can not be saved or received."); //Supposed to be written in log.
+            sendResponse("ERROR");
+        } finally {
+            try{
+                mySocket.close();
+            } catch (IOException e){
+                System.err.println("Strange IOException on closing socket."); //Supposed to be written in log.
+                //sendResponse("ERROR");  Error already sent in catch.
+            }
         }
     }
 }
