@@ -9,6 +9,7 @@
     <!--android:layout_height="wrap_content" -->
     <!--android:text="Hello World, Main"-->
     <!--/>-->
-    <Button android:id="@+id/takePhoto" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="take photo"/>
+    <Button android:id="@+id/takePhoto" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Take photo"/>
+    <Button android:id="@+id/spendingsSum" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="View sum of all spendings"/>
 </LinearLayout>
 
