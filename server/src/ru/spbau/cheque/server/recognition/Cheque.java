@@ -10,4 +10,12 @@ public class Cheque {
 
     private String company;
     private List<BlueObject> table;
+
+    @Override
+    public String toString() {
+        return "Cheque{" +
+                "company='" + company + '\'' +
+                ", table=" + table +
+                '}';
+    }
 }
