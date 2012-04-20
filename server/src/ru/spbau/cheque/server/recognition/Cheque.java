@@ -1,8 +1,9 @@
 package ru.spbau.cheque.server.recognition;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Cheque {
+public class Cheque implements Serializable {
     public Cheque(String company, List<BlueObject> table) {
         this.company = company;
         this.table = table;
