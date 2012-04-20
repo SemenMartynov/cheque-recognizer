@@ -13,7 +13,7 @@ public class ChequeRecognitionServer {
 
     public ChequeRecognitionServer(int port) throws NoConnectionException{
         try{
-            myServerSocket = new ServerSocket(3843);
+            myServerSocket = new ServerSocket(port);
         } catch (IOException e){
             System.err.println("Can't listen port 3843");
             throw new NoConnectionException();
