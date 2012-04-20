@@ -9,6 +9,7 @@ public class Recognizer implements Runnable {
     public Recognizer() {
         this.engine = new TesseractOcrEngine("tesseract", "-l rus -psm 6");
         this.tableExtractor = new RegexTableExtractor();
+        this.companyNameExtractor = new CompanyNameExtractor();
     }
 
     @Override
