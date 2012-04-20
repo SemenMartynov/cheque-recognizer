@@ -21,6 +21,7 @@ public class Main extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         Button takePhotoBtn = (Button) findViewById(R.id.takePhoto);
+        Button spendingsSumBtn = (Button) findViewById(R.id.spendingsSum);
         takePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -29,7 +30,13 @@ public class Main extends Activity
                 startActivityForResult(pictureIntent, GET_PHOTO_FROM_CAMERA_REQUEST);
             }
         });
-
+        spendingsSumBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main.this, spendingsSumActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -37,7 +44,7 @@ public class Main extends Activity
             Socket sock = null;
             try {
                 Bitmap pic = (Bitmap) data.getExtras().get("data");
-                sock = new Socket("192.168.222.142", 3843);
+                sock = new Socket("192.168.222.169", 3843);
                 OutputStream os = sock.getOutputStream();
                 pic.compress(Bitmap.CompressFormat.JPEG, 100, os);
                 os.flush();
