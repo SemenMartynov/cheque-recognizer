@@ -14,21 +14,18 @@ public class RegexTableExtractor implements TableExtractor {
             if (matcher.matches()) {
                 String f1 = matcher.group(1);
                 String f2 = matcher.group(2);
-                Matcher matcher2 = Pattern.compile("(.*)\\p{Blank}(.*)?+$").matcher(f2);  //(\p{all}*)$
+                Matcher matcher2 = Pattern.compile("(.*)\\p{Blank}(.*)?+$").matcher(f2);
                 if (matcher2.matches()) {
                     String price = matcher2.group(2);
-                    try {
-                        entries.add(new BlueObject(nameAccum + matcher2.group(1),
-                                    Float.parseFloat(price.replaceAll("^\\p{Punct}|\\p{Punct}$", ""))));
-                        nameAccum = "";
-                    } catch (NumberFormatException e) {
-                        // suppress it - just don't add this to `entries`
-                        // this is most probably caused by line-wrap - save to accumulator
-                        nameAccum = matcher2.group(1) + price;
+                    String price2 = price.replaceAll("^\\p{Punct}|\\p{Punct}$", "");
+                    if (price2.matches("(\\p{Digit}+\\p{Punct}{1}\\p{Digit}+)")) {
+                            entries.add(new BlueObject(nameAccum + matcher2.group(1),
+                                        Float.parseFloat(price2)));
+                    } else {
+                        entries.add(new BlueObject(nameAccum + matcher2.group(1), -1));
                     }
                 }
             }
-
         }
         return entries;
     }
