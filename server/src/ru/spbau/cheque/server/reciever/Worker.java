@@ -33,11 +33,11 @@ public class Worker implements Runnable{
     }
 
     public void sendResponse(String inpResponse){
-        DataOutputStream os = null;
+        ObjectOutputStream oos = null;
         try{
-            os = new DataOutputStream(mySocket.getOutputStream());
-            os.writeBytes(inpResponse);
-            os.close();
+            oos = new ObjectOutputStream(mySocket.getOutputStream());
+            oos.writeObject(inpResponse);
+            oos.close();
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to: " + mySocket.getInetAddress().toString()); //Supposed to be written in log.
         }
@@ -49,8 +49,12 @@ public class Worker implements Runnable{
         try{
             InputStream is = mySocket.getInputStream();
             for (int i = 0; i < 4; ++i){
-                int bytesRead = is.read(buffer, 0, 4);
-                if (bytesRead <= 0) throw new ImageSavingFailureException();
+                int bytesRead = 0;
+                while (bytesRead < 4){
+                    int currentRead = is.read(buffer, bytesRead, 4 - bytesRead);
+                    if (currentRead == -1) throw new ImageSavingFailureException();
+                    bytesRead += currentRead;
+                }
                 coordinates.add(ByteBuffer.wrap(buffer, 0, 4).getInt());
             }
             is.close();
