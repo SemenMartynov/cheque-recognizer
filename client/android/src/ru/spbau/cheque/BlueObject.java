@@ -1,4 +1,4 @@
-package ru.spbau.cheque.server.recognition;
+package ru.spbau.cheque;
 
 public class BlueObject {
     public BlueObject(String name, float price) {
@@ -6,7 +6,7 @@ public class BlueObject {
         this.count = 1;
         this.price = price;
     }
-    public BlueObject(String name, float count, float price) {
+    public BlueObject(String name, int count, float price) {
         this.name = name;
         this.count = count;
         this.price = price;
@@ -20,7 +20,7 @@ public class BlueObject {
         this.name = name;
     }
 
-    public float getCount() {
+    public int getCount() {
         return count;
     }
 
@@ -46,6 +46,6 @@ public class BlueObject {
     }
 
     private String name;
-    private float count;
+    private int count;
     private float price;
 }
