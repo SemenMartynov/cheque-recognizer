@@ -1,5 +1,8 @@
 package ru.spbau.cheque.server.ofx;
 
+import ru.spbau.cheque.server.ofx.SqliteDB;
+import java.util.List;
+
 /**
  * NetBeans
  *
@@ -7,21 +10,21 @@ package ru.spbau.cheque.server.ofx;
  */
 public class ExportOFX {
 
-    public static void main(String[] args) {
-        int count = 5;
+    public ExportOFX(int userId) {
+        SqliteDB DB = new SqliteDB();
 
-        String system_time = new java.text.SimpleDateFormat("YmdHMS").format(java.util.Calendar.getInstance().getTime());
-        String balance_time = new java.text.SimpleDateFormat("yyyyMMdd").format(java.util.Calendar.getInstance().getTime());
+        String time = new java.text.SimpleDateFormat("YmdHMS").format(java.util.Calendar.getInstance().getTime());
+        OFXFile = "<OFX>\r\n\t<SIGNONMSGSRSV1>\r\n\t\t<SONRS>\r\n\t\t\t<STATUS>\r\n\t\t\t\t<CODE>0\r\n\t\t\t\t<SEVERITY>INFO\r\n\t\t\t</STATUS>\r\n\t\t\t<DTSERVER>" + time + "\r\n\t\t\t<LANGUAGE>\r\n\t\t\t<DTACCTUP>" + time + "\r\n\t\t\t<FI>\r\n\t\t\t\t<ORG>CHEQUERECOGNIZER\r\n\t\t\t\t<FID>01234\r\n\t\t\t</FI>\r\n\t\t</SONRS>\r\n\t</SIGNONMSGSRSV1>\r\n\t<BANKMSGSRSV1>\r\n\t\t<STMTTRNRS>\r\n\t\t\t<TRNUID>23382938\r\n\t\t\t<STATUS>\r\n\t\t\t\t<CODE>0\r\n\t\t\t\t<SEVERITY>INFO\r\n\t\t\t</STATUS>\r\n\t\t\t<STMTRS>\r\n\t\t\t\t<CURDEF>RUR\r\n\t\t\t\t<BANKACCTFROM>\r\n\t\t\t\t\t<BANKID>000000000\r\n\t\t\t\t\t<ACCTID>CASH\r\n\t\t\t\t\t<ACCTTYPE>SAVINGS\r\n\t\t\t\t</BANKACCTFROM>\r\n";
 
-        //PrintWriter out = new PrintWriter(new FileOutputStream("results.ofx"));
-
-        System.out.println("<OFX><SIGNONMSGSRSV1><SONRS><STATUS><CODE>0<SEVERITY>INFO</STATUS><DTSERVER>" + system_time + "<LANGUAGE>RUS<DTACCTUP>" + system_time + "<FI><ORG>CHEQUERECOGNIZER<FID>01234</FI></SONRS></SIGNONMSGSRSV1>");
-
-        System.out.println("<BANKMSGSRSV1><STMTTRNRS><TRNUID>23382938<STATUS><CODE>0<SEVERITY>INFO</STATUS><STMTRS><CURDEF>RUR<BANKACCTFROM><BANKID>000000000<ACCTID>CASH<ACCTTYPE>SAVINGS</BANKACCTFROM>");
-
-        for (int i = 1; i <= count; i++) {
-            System.out.println("<BANKTRANLIST><DTSTART>20070101<DTEND>20071015<STMTTRN><TRNTYPE>CREDIT<DTPOSTED>" + balance_time + "<DTUSER>" + balance_time + "<TRNAMT>200,00<FITID>" + i + "<NAME>TOVAR" + i + "<MEMO>MAGAZIN</STMTTRN></BANKTRANLIST>");
+        for (ChequeString element : DB.getChequeStrings(userId)) {
+            OFXFile += "\t\t\t\t<BANKTRANLIST>\r\n\t\t\t\t\t<DTSTART>20100101\r\n\t\t\t\t\t<DTEND>20101015\r\n\t\t\t\t\t<STMTTRN>\r\n\t\t\t\t\t\t<TRNTYPE>CREDIT\r\n\t\t\t\t\t\t<DTPOSTED>" + element.getOperationTime() + "\r\n\t\t\t\t\t\t<DTUSER>" + element.getOperationTime() + "\r\n\t\t\t\t\t\t<TRNAMT>" + element.getPrice() + "\r\n\t\t\t\t\t\t<FITID>" + element.getId() + "\r\n\t\t\t\t\t\t<NAME>" + element.getName() + "\r\n\t\t\t\t\t\t<MEMO>" + element.getMemo() + "\r\n\t\t\t\t\t</STMTTRN>\r\n\t\t\t\t</BANKTRANLIST>\r\n";
         }
-        System.out.println("</STMTRS></STMTTRNRS></BANKMSGSRSV1></OFX>");
+        OFXFile += "\t\t\t</STMTRS>\r\n\t\t</STMTTRNRS>\r\n\t</BANKMSGSRSV1>\r\n</OFX>";
+    }
+    private String OFXFile;
+
+    @Override
+    public String toString() {
+        return OFXFile;
     }
 }

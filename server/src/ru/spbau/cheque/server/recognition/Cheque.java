@@ -11,6 +11,7 @@ public class Cheque implements Serializable {
 
     private String company;
     private List<BlueObject> table;
+    private int userId = 1; // for authorization
 
     @Override
     public String toString() {
@@ -18,5 +19,17 @@ public class Cheque implements Serializable {
                 "company='" + company + '\'' +
                 ", table=" + table +
                 '}';
+    }
+    
+    public String getCompany() {
+        return company;
+    }
+    
+    public List<BlueObject> getTable() {
+        return table;
+    }
+    
+    public int getUsrId() {
+        return userId;
     }
 }
