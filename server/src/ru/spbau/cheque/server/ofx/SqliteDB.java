@@ -4,12 +4,11 @@
  */
 package ru.spbau.cheque.server.ofx;
 
-import ru.spbau.cheque.server.recognition.BlueObject;
-import ru.spbau.cheque.server.recognition.Cheque;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import ru.spbau.cheque.server.recognition.BlueObject;
+import ru.spbau.cheque.server.recognition.Cheque;
 
 /**
  *
@@ -29,7 +28,7 @@ public class SqliteDB {
             e.printStackTrace();
         }
     }
-    private String url = "jdbc:sqlite:C:\\Users\\sam\\Documents\\NetBeansProjects\\cheque-recognizer\\db\\ChequeRecognizer.sqlite";
+    private String url = "jdbc:sqlite:D:\\NetBeansProjects\\cheque-recognizer\\db\\ChequeRecognizer.sqlite";
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
