@@ -36,15 +36,15 @@ public class SpendingsSumActivity extends Activity {
 
     private BlueObject getRandomBlue(){
         String name = "Name" + blueCounter.toString();
-        int count = myRand.nextInt(10) + 1;
-        float price = myRand.nextFloat() * 1000;
+        float count = myRand.nextFloat() * 3;
+        float price = myRand.nextFloat() * 100;
         return new BlueObject(name, count, price);
     }
 
    private DBOpenHelper helper = new DBOpenHelper(SpendingsSumActivity.this);
 
    private void fillDBWithRandomData(){
-       int chequeNum = 10;
+       int chequeNum = 3;
        SQLiteDatabase db = helper.getWritableDatabase();
        for (int i = 0; i < chequeNum; ++i){
            Cheque rndCheque = getRandomCheque();
@@ -60,10 +60,16 @@ public class SpendingsSumActivity extends Activity {
    }
 
     private String getGlobalSumm(){
-        SQLiteDatabase db = helper.getWritableDatabase();
+        SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(DBOpenHelper.TABLE_NAME, new String[] { "SUM(" + DBOpenHelper.PRICE + ")" }, null, null, null, null, null);
         cursor.moveToFirst();
         return Float.toString(cursor.getFloat(0));
+    }
+
+    private void drobDB(){
+        //SQLiteDatabase db = helper.getWritableDatabase();
+        //db.execSQL("DROP TABLE IF EXISTS " + DBOpenHelper.TABLE_NAME);
+        SpendingsSumActivity.this.deleteDatabase(DBOpenHelper.DB_NAME);
     }
 
     /** Called when the activity is first created. */
@@ -72,8 +78,10 @@ public class SpendingsSumActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
         fillDBWithRandomData();
+        //drobDB();
         setContentView(ru.spbau.cheque.R.layout.spendingssum);
         TextView textOnScreen = (TextView) findViewById(ru.spbau.cheque.R.id.sum);
+        //
         textOnScreen.setText("Current sum of your spendings is: " + getGlobalSumm());
 
     }

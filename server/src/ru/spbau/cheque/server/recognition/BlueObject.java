@@ -6,7 +6,7 @@ public class BlueObject {
         this.count = 1;
         this.price = price;
     }
-    public BlueObject(String name, int count, float price) {
+    public BlueObject(String name, float count, float price) {
         this.name = name;
         this.count = count;
         this.price = price;
@@ -20,7 +20,7 @@ public class BlueObject {
         this.name = name;
     }
 
-    public int getCount() {
+    public float getCount() {
         return count;
     }
 
@@ -46,6 +46,6 @@ public class BlueObject {
     }
 
     private String name;
-    private int count;
+    private float count;
     private float price;
 }
