@@ -4,11 +4,12 @@
  */
 package ru.spbau.cheque.server.ofx;
 
+import ru.spbau.cheque.server.recognition.BlueObject;
+import ru.spbau.cheque.server.recognition.Cheque;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import ru.spbau.cheque.server.recognition.BlueObject;
-import ru.spbau.cheque.server.recognition.Cheque;
 
 /**
  *
@@ -21,7 +22,9 @@ public class SqliteDB {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(url);
             statement = connection.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
