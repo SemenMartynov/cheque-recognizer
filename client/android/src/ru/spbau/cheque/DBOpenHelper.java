@@ -12,14 +12,14 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DBOpenHelper extends SQLiteOpenHelper{
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "test";
+    public static final String DB_NAME = "test";
 
     public static final String TABLE_NAME = "blue_objects";
     public static final String NAME = "name";
     public static final String COUNT = "count";
     public static final String PRICE = "price";
     private static final String CREATE_TABLE = "create table " + TABLE_NAME + " ( _id integer primary key autoincrement, "
-            + NAME + " TEXT, " + COUNT + " INTEGER, " + PRICE + " REAL)";
+            + NAME + " TEXT, " + COUNT + " REAL, " + PRICE + " REAL)";
 
     public DBOpenHelper(Context context) {
         super(context, DB_NAME, null,DB_VERSION);
