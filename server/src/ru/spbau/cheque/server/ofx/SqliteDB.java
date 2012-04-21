@@ -29,7 +29,7 @@ public class SqliteDB {
             e.printStackTrace();
         }
     }
-    private String url = "jdbc:sqlite:D:\\tmp\\NetBeansProjects\\cheque-recognizer\\db\\ChequeRecognizer.sqlite";
+    private String url = "jdbc:sqlite:C:\\Users\\sam\\Documents\\NetBeansProjects\\cheque-recognizer\\db\\ChequeRecognizer.sqlite";
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
@@ -41,7 +41,7 @@ public class SqliteDB {
             resultSet = statement.executeQuery("SELECT * FROM cheque WHERE user = " + userId + ";");
             while (resultSet.next()) {
                 ChequeStrings.add( new ChequeString( resultSet.getInt("id"),
-                                                     resultSet.getDate("timestamp"),
+                                                     resultSet.getString("timestamp"),
                                                      resultSet.getString("name"),
                                                      resultSet.getFloat("quantity"),
                                                      resultSet.getFloat("price"),
