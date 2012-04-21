@@ -40,7 +40,8 @@ public class ServerHTTP {
         public void run() {
             try {
                 readInputHeaders(); //Получили запрос
-                writeResponse("<html><body><h1>TEST!!</h1></body></html>"); // Отправили ответ
+                ExportOFX OFX = new ExportOFX(1);//TODO: Get UserID from client
+                writeResponse(OFX.toString()); // Отправили ответ
             } catch (Throwable t) {
                 /*
                  * do nothing
@@ -60,7 +61,7 @@ public class ServerHTTP {
         private void writeResponse(String s) throws Throwable {
             String response = "HTTP/1.1 200 OK\r\n" // выводим служебную информацию
                     + "Server: Cheque Recognizer HTTP Server/2012-04-20\r\n"
-                    + "Content-Type: text/html\r\n"
+                    + "Content-Type: text/html;charset=UTF-8\r\n"
                     + "Content-Length: " + s.length() + "\r\n"
                     + "Connection: close\r\n\r\n";
             String result = response + s; // выводим полезную информацию
@@ -75,7 +76,6 @@ public class ServerHTTP {
                 if (str == null || str.trim().length() == 0) {
                     break;
                 } else {
-                    //TODO:
                     //GET method
                 }
             }
