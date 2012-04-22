@@ -7,9 +7,9 @@ import java.util.Date;
  * @author sam
  */
 public class ChequeString {
-    public ChequeString(int id, Date date, String name, float quantity, float price, String memo) {
+    public ChequeString(int id, String date, String name, float quantity, float price, String memo) {
         this.id = id;
-        this.operationTime = new java.text.SimpleDateFormat("yyyyMMdd").format(date);
+        this.operationTime = date.replace("-", "").substring(0, 8);
         this.name = name;
         this.price = price * quantity;
         this.memo = memo;
@@ -32,8 +32,8 @@ public class ChequeString {
         return name;
     }
     
-    public float getPrice() {
-        return price;
+    public String getPrice() {
+        return Float.toString(price).replace(".", ",");
     }
     
     public String getMemo() {

@@ -12,12 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Classname:
- * User: dimatwl
- * Date: 4/20/12
- * Time: 9:25 PM
- */
 public class SpendingsSumActivity extends Activity {
 
     private static Integer blueCounter = 0;
@@ -64,6 +58,14 @@ public class SpendingsSumActivity extends Activity {
         return Float.toString(cursor.getFloat(0));
     }
 
+
+    private String getSumOfLast(int inpNumber){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.query(DBOpenHelper.TABLE_NAME, new String[] { "SUM(" + DBOpenHelper.PRICE + ")" }, null, null, null, null, null);
+        cursor.moveToFirst();
+        return Float.toString(cursor.getFloat(0));
+    }
+
     private void drobDB(){
         //SQLiteDatabase db = helper.getWritableDatabase();
         //db.execSQL("DROP TABLE IF EXISTS " + DBOpenHelper.TABLE_NAME);
@@ -79,8 +81,19 @@ public class SpendingsSumActivity extends Activity {
         //drobDB();
         setContentView(ru.spbau.cheque.R.layout.spendingssum);
         TextView textOnScreen = (TextView) findViewById(ru.spbau.cheque.R.id.sum);
-        //
-        textOnScreen.setText("Current sum of your spendings is: " + getGlobalSumm());
+        textOnScreen.setText("Current sum of all spendings is: " + getGlobalSumm());
 
+    }
+
+    public void putChequeToDB(Cheque inpCheque){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        for (BlueObject bl : inpCheque.getBlues()){
+            ContentValues cv = new ContentValues();
+            cv.put(DBOpenHelper.NAME, bl.getName());
+            cv.put(DBOpenHelper.COUNT, bl.getCount());
+            cv.put(DBOpenHelper.PRICE, bl.getPrice());
+            db.insert(DBOpenHelper.TABLE_NAME, null, cv);
+        }
+        db.close();
     }
 }
