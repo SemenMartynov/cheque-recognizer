@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.TextView;
+import ru.spbau.cheque.recognition.BlueObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,7 @@
 package ru.spbau.cheque;
 
+import ru.spbau.cheque.recognition.BlueObject;
+
 import java.io.Serializable;
 import java.util.List;
 

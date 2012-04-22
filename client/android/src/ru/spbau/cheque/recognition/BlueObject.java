@@ -1,4 +1,4 @@
-package ru.spbau.cheque.server.recognition;
+package ru.spbau.cheque.recognition;
 
 public class BlueObject {
     public BlueObject(String name, float price) {

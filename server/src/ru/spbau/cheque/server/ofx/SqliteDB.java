@@ -4,8 +4,8 @@
  */
 package ru.spbau.cheque.server.ofx;
 
-import ru.spbau.cheque.server.recognition.BlueObject;
-import ru.spbau.cheque.server.recognition.Cheque;
+import ru.spbau.cheque.recognition.BlueObject;
+import ru.spbau.cheque.recognition.Cheque;
 
 import java.sql.*;
 import java.util.ArrayList;

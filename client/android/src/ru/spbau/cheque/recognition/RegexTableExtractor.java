@@ -1,4 +1,4 @@
-package ru.spbau.cheque.server.recognition;
+package ru.spbau.cheque.recognition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class RegexTableExtractor implements TableExtractor {
                         entries.add(new BlueObject(nameAccum + matcher2.group(1),
                                 Float.parseFloat(price2)));
                     } else {
-                        entries.add(new BlueObject(nameAccum + matcher2.group(1), -1));
+                        entries.add(new BlueObject(nameAccum + matcher2.group(1), 0));
                     }
                 }
             }
@@ -54,8 +54,8 @@ public class RegexTableExtractor implements TableExtractor {
                 String f1 = matcher.group(1);
                 String f2 = matcher.group(2);   //name,count
                 String f3 = matcher.group(5);   //price
-                float countf = -1;
-                float pricef = -1;
+                float countf = 0;
+                float pricef = 0;
                 String name = "";
                 f3 = f3.replaceAll("^\\p{Punct}|\\p{Punct}$", "")
                         .replaceAll("^\\p{Alpha}|\\p{Alpha}$", "");

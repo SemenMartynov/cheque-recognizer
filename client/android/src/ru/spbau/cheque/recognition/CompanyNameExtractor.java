@@ -1,4 +1,4 @@
-package ru.spbau.cheque.server.recognition;
+package ru.spbau.cheque.recognition;
 
 import java.util.List;
 import java.util.regex.Matcher;
