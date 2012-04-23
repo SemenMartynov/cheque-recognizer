@@ -157,6 +157,7 @@ public class SpendingsPeriodActivity extends Activity{
                 Cursor cursor = db.rawQuery(rawSql, null);
                 cursor.moveToFirst();
                 textOnScreen.setText("Sum of spendings is: " + new DecimalFormat("#.##").format(cursor.getFloat(0)) + " rubles.");
+                cursor.close();
 
             } else {
                 textOnScreen.setText("Sorry, but it's impossible!");

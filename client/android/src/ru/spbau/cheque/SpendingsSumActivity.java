@@ -26,7 +26,9 @@ public class SpendingsSumActivity extends Activity {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(DBOpenHelper.BLUE_TABLE_NAME, new String[] { "SUM(" + DBOpenHelper.BLUE_PRICE + ")" }, null, null, null, null, null);
         cursor.moveToFirst();
-        return new DecimalFormat("#.##").format(cursor.getFloat(0));
+        String result = new DecimalFormat("#.##").format(cursor.getFloat(0));
+        cursor.close();
+        return result;
     }
 
 
@@ -34,8 +36,9 @@ public class SpendingsSumActivity extends Activity {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(DBOpenHelper.BLUE_TABLE_NAME, new String[] { "SUM(" + DBOpenHelper.BLUE_PRICE + ")" }, "_id > (SELECT MAX(_id) FROM " + DBOpenHelper.BLUE_TABLE_NAME + ") - " + inpLimit.toString(), null, null, null, null, null);
         cursor.moveToFirst();
-
-        return new DecimalFormat("#.##").format(cursor.getFloat(0));
+        String result = new DecimalFormat("#.##").format(cursor.getFloat(0));
+        cursor.close();
+        return result;
     }
 
     private void drobDB(){
@@ -47,7 +50,7 @@ public class SpendingsSumActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //helper.fillDBWithRandomData(20);
+        helper.fillDBWithRandomData(20);
         //drobDB();
 
         setContentView(ru.spbau.cheque.R.layout.spendingssum);
