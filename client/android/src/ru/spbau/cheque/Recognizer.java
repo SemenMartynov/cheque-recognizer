@@ -15,23 +15,25 @@ public class Recognizer {
         this.companyNameExtractor = new CompanyNameExtractor();
     }
 
-    public Cheque doRecognition(Bitmap image,
-                                int tableX, int tableY, int tableW, int tableH) throws OcrFailedException, UnsupportedEncodingException {
-
+    private String recognize(Bitmap img) {
         File myDir = new File("/sdcard");//getExternalFilesDir(Environment.MEDIA_MOUNTED);
         TessBaseAPI baseApi = new TessBaseAPI();
         //baseApi.setPageSegMode(TessBaseAPI.PSM_SINGLE_BLOCK);
 
-        boolean inited = baseApi.init(myDir.toString(), "rus"/*, TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED*/); // myDir + "/tessdata/eng.traineddata" must be present
-        baseApi.setImage(image);
-        String recognizedText = baseApi.getUTF8Text();
-        baseApi.setImage(Bitmap.createBitmap(image, tableX, tableY, tableW, tableH));
-        String recognizedText2 = baseApi.getUTF8Text();
+        baseApi.init(myDir.toString(), "rus"/*, TessBaseAPI.OEM_TESSERACT_CUBE_COMBINED*/); // myDir + "/tessdata/eng.traineddata" must be present
+        baseApi.setImage(img);
+        String ret = baseApi.getUTF8Text();
         baseApi.end();
+
+        return ret;
+    }
+    public Cheque doRecognition(Bitmap original, Bitmap cropped) throws OcrFailedException, UnsupportedEncodingException {
+
+        String recognizedText = recognize(original);
+        String recognizedText2 = recognize(cropped);
 
         List<String> ocredText = Arrays.asList(recognizedText.split("\n"));
         List<String> ocredAreaText = Arrays.asList(recognizedText2.split("\n"));
-        ////
 
 //        List<String> ocredText = engine.doOcr(image);
 //        List<String> ocredAreaText = engine.doOcr(image.getSubimage(tableX, tableY, tableW, tableH));

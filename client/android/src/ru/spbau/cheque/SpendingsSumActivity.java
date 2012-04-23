@@ -1,7 +1,6 @@
 package ru.spbau.cheque;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,12 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import ru.spbau.cheque.recognition.BlueObject;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class SpendingsSumActivity extends Activity {
 
@@ -50,8 +45,8 @@ public class SpendingsSumActivity extends Activity {
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        helper.fillDBWithRandomData(20);
-        //drobDB();
+//        drobDB();
+//        helper.fillDBWithRandomData(20);
 
         setContentView(ru.spbau.cheque.R.layout.spendingssum);
         Button goBackBtn = (Button) findViewById(R.id.goBack);
