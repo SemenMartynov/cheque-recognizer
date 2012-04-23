@@ -25,4 +25,8 @@ public class Cheque implements Serializable {
     public List<BlueObject> getBlues(){
         return table;
     }
+
+    public String getCompany(){
+        return company;
+    }
 }

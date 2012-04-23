@@ -30,6 +30,7 @@ public class Main extends Activity
         setContentView(R.layout.main);
         Button takePhotoBtn = (Button) findViewById(R.id.takePhoto);
         Button spendingsSumBtn = (Button) findViewById(R.id.spendingsSum);
+        Button spendingsPeriodBtn = (Button) findViewById(R.id.spendingsPeriod);
         takePhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,6 +73,15 @@ public class Main extends Activity
                 startActivity(intent);
             }
         });
+
+
+        spendingsPeriodBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Main.this, SpendingsPeriodActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -88,13 +98,13 @@ public class Main extends Activity
                 e.printStackTrace();
             }
 
-            try {
-                new Recognizer().doRecognition(bmp, 0, 0, bmp.getWidth(), bmp.getHeight());
-            } catch (Exception e) {
-                e.printStackTrace();
-            } catch (OcrFailedException e) {
-                e.printStackTrace();
-            }
+            //try {
+            //    new Recognizer().doRecognition(bmp, 0, 0, bmp.getWidth(), bmp.getHeight());
+            //} catch (Exception e) {
+            //    e.printStackTrace();
+            //} catch (OcrFailedException e) {
+            //    e.printStackTrace();
+            //}
             return;
             //Intent intent = new Intent("com.android.camera.action.CROP");
 //            intent.setClassName("com.android.camera", "com.android.camera.CropImage");
