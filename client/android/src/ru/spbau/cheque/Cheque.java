@@ -1,5 +1,7 @@
 package ru.spbau.cheque;
 
+import ru.spbau.cheque.recognition.BlueObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,5 +24,9 @@ public class Cheque implements Serializable {
 
     public List<BlueObject> getBlues(){
         return table;
+    }
+
+    public String getCompany(){
+        return company;
     }
 }
