@@ -28,8 +28,10 @@ public class Main extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        outputFileUri = getIntent() != null && getIntent().getExtras() != null ? (Uri) getIntent().getExtras().get("outUri") : null;
-        outputFile = getIntent() != null && getIntent().getExtras() != null ? (File) getIntent().getExtras().get("outFile") : null;
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            outputFileUri = (Uri) getIntent().getExtras().get("outUri");
+            outputFile = (File) getIntent().getExtras().get("outFile");
+        }
 
         setContentView(R.layout.main);
         Button takePhotoBtn = (Button) findViewById(R.id.takePhoto);
@@ -45,6 +47,7 @@ public class Main extends Activity
                     outputFile = createTemporaryFile("cheque-", ".jpg");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    return;
                 }
                 outputFile.deleteOnExit();
                 getIntent().putExtra("outFile", outputFile);
@@ -94,69 +97,41 @@ public class Main extends Activity
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == GET_PHOTO_FROM_CAMERA_REQUEST) {
-            //Bitmap bmp = (Bitmap) data.getExtras().get("data");
 
-//            Bitmap bmp = null;
-//            try {
-//                bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputFileUri);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            try {
-//                new Recognizer().doRecognition(bmp, 0, 0, bmp.getWidth(), bmp.getHeight());
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            } catch (OcrFailedException e) {
-//                e.printStackTrace();
-//            }
+        if (resultCode != Activity.RESULT_OK)
+            return;
 
+        switch (requestCode) {
+        case GET_PHOTO_FROM_CAMERA_REQUEST :
             Intent crop = new Intent(this, CropImage.class);
             crop.setData(outputFileUri);
-
-//            File cropedFile = null;
-//            try {
-//                cropedFile = new File(outputFile.getParent() + File.separator + outputFile.getName().replaceAll(".jpg$", "-croped.jpg"));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            cropedFile.deleteOnExit();
-//
-//            Uri cropedFileUri = Uri.fromFile(cropedFile);
-
-//            crop.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, cropedFileUri);
             crop.putExtra("return-data", true);
             try {
                 startActivityForResult(crop, CROP_IMAGE_REQUEST);
             }
             catch(Exception e){
-                System.out.println(e.getStackTrace());
+                e.printStackTrace();
             }
-        } else if (resultCode == Activity.RESULT_OK && requestCode == CROP_IMAGE_REQUEST) {
+            break;
+        case CROP_IMAGE_REQUEST :
+            if (data == null || data.getExtras() == null)
+                return;
+
             Bitmap bmpCropped = (Bitmap) data.getExtras().get("data");
-            Bitmap bmp = null;
             try {
-                bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputFileUri);
+                Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputFileUri);
+                Cheque cheque = new Recognizer().doRecognition(bmp, bmpCropped);
+                if (cheque.getBlues().size() > 0)
+                    new DBOpenHelper(this).putChequeToDB(cheque);
+
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            Cheque cheque = null;
-            try {
-                cheque = new Recognizer().doRecognition(bmp, bmpCropped);
             } catch (Exception e) {
                 e.printStackTrace();
             } catch (OcrFailedException e) {
                 e.printStackTrace();
             }
-
-            if (cheque.getBlues().size() > 0)
-                new DBOpenHelper(this).putChequeToDB(cheque);
+            break;
         }
     }
 }
